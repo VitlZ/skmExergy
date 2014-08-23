@@ -1,0 +1,17 @@
+{
+    "contents" : "# \"getData\" as the main function\n\n#' Query SKM Exergy API.\n#'\n#' This function creates a web query url and reads data from SKM Exergy (\\url{https://exergy.skmenergy.com/}) into a data.frame. You must be a client for use it.\n#'\n#' @param series_names Character vector with names of series. Example: c(\"CNPPLAN_RU1_H\",\"PROPLAN_RU1_H\",\"SPOT_RU1_H\")\n#' @param fromDate Start date as character (YYYY-MM-DD) or as date in R format. Examples:\"2014-21-08\" or \"as.Date(Sys.time())\"  \n#' @param toDate End date as character (YYYY-MM-DD) or as date in R format. Examples:\"2014-22-08\" or \"as.Date(Sys.time())+1\"  \n#' @param fromHour Start hour as character (\"HH\"). \"00\" by default for first hour of day.\n#' @param toHour End hour as character (\"HH\"). \"23\" by default for the last hour of day.\n#' @return Dataframe with data for series and time period.\n#' @examples \n#' \\dontrun{\n#' # Get data for the last week\n#' today<-as.Date(Sys.time())\n#' seriesList<-c(\"CNPPLAN_RU1_H\",\"PROPLAN_RU1_H\",\"SPOT_RU1_H\")\n#'\n#' dataSet<-getData(seriesList,today-6,today)\n#' dataSet}\n#' @export getData\ngetData<-function(series_names,fromDate,toDate,fromHour=\"00\",toHour=\"23\"){\n  \n  # Test input\n  stopifnot(is.character(series_names), !is.null(series_names))\n  stopifnot(!is.null(fromDate))\n  stopifnot(!is.null(toDate))\n  stopifnot(is.character(fromHour), !is.null(fromHour))\n  stopifnot(is.character(toHour), !is.null(toHour))\n     \n  # Make series string \n  series_string<-character()\n  for(s in 1:length(series_names)){\n    series_string<-paste(series_string,series_names[s],sep=\",\")\n  }\n  series_string<-sub(\",\",series_string,replacement=\"\") # Delete first comma\n  \n  # Get data\n  ds<-read.csv(paste(\"https://exergy.skmenergy.com/api/data/?alt=csv&from=\",fromDate,\"T\",fromHour,\":00&to=\",toDate,\"T\",toHour,\":00&series=\",series_string,sep=\"\"))\n  return(ds)\n}\n\n\n",
+    "created" : 1408609550122.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1950619306",
+    "id" : "633B2754",
+    "lastKnownWriteTime" : 1408641720,
+    "path" : "C:/R/skmExergy/skmExergy/R/getData.R",
+    "project_path" : "R/getData.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}
